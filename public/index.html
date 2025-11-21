@@ -29,94 +29,94 @@
     <ul id="taskList"></ul>
 
     <script>
-        const taskList = document.getElementById("taskList");
+    const taskList = document.getElementById("taskList");
 
-        window.onload = fetchTodos;
+    window.onload = fetchTodos;
 
-        async function fetchTodos() {
-            const res = await fetch("/todos");
-            const todos = await res.json();
-            renderTodos(todos);
-        }
+    async function fetchTodos() {
+        const res = await fetch("/todos");
+        const todos = await res.json();
+        renderTodos(todos);
+    }
 
-        function renderTodos(todos) {
-            taskList.innerHTML = "";
+    function renderTodos(todos) {
+        taskList.innerHTML = "";
 
-            todos.forEach(todo => {
-                const li = document.createElement("li");
+        todos.forEach(todo => {
+            const li = document.createElement("li");
 
-                // Checkbox
-                const checkbox = document.createElement("input");
-                checkbox.type = "checkbox";
-                checkbox.checked = todo.isDone;
-                checkbox.onchange = () => toggleTodo(todo._id, checkbox.checked);
+            // Checkbox
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.checked = todo.isDone;
+            checkbox.onchange = () => toggleTodo(todo._id, checkbox.checked);
 
-                // Task text
-                const taskText = document.createElement("span");
-                taskText.className = "task-text";
-                taskText.textContent = todo.task;
-                if (todo.isDone) taskText.classList.add("done");
+            // Task text
+            const taskText = document.createElement("span");
+            taskText.className = "task-text";
+            taskText.textContent = todo.task;
+            if (todo.isDone) taskText.classList.add("done");
 
-                // Edit button
-                const editBtn = document.createElement("button");
-                editBtn.textContent = "Edit";
-                editBtn.onclick = () => editTodo(todo._id, taskText);
+            // Edit button
+            const editBtn = document.createElement("button");
+            editBtn.textContent = "Edit";
+            editBtn.onclick = () => editTodo(todo._id, taskText);
 
-                // Delete button
-                const deleteBtn = document.createElement("button");
-                deleteBtn.textContent = "Delete";
-                deleteBtn.onclick = () => deleteTodo(todo._id);
+            // Delete button
+            const deleteBtn = document.createElement("button");
+            deleteBtn.textContent = "Delete";
+            deleteBtn.onclick = () => deleteTodo(todo._id);
 
-                li.append(checkbox, taskText, editBtn, deleteBtn);
-                taskList.appendChild(li);
-            });
-        }
+            li.append(checkbox, taskText, editBtn, deleteBtn);
+            taskList.appendChild(li);
+        });
+    }
 
-        // Add Todo
-        async function addTodo() {
-            const task = document.getElementById("taskInput").value;
-            if (!task.trim()) return alert("Task cannot be empty");
+    // Add Todo
+    async function addTodo() {
+        const task = document.getElementById("taskInput").value;
+        if (!task.trim()) return alert("Task cannot be empty");
 
-            await fetch("/add-todo", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ task })
-            });
+        await fetch("/add-todo", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ task })
+        });
 
-            document.getElementById("taskInput").value = "";
-            fetchTodos();
-        }
+        document.getElementById("taskInput").value = "";
+        fetchTodos();
+    }
 
-        // Delete Todo
-        async function deleteTodo(id) {
-            await fetch(`/delete-todo/${_id}`, { method: "DELETE" });
-            fetchTodos();
-        }
+    // Delete Todo
+    async function deleteTodo(id) {
+        await fetch(`/delete-todo/${id}`, { method: "DELETE" });
+        fetchTodos();
+    }
 
-        // Edit Todo
-        async function editTodo(id, textElement) {
-            const newText = prompt("Edit Task:", textElement.textContent);
-            if (!newText || newText.trim() === "") return;
+    // Edit Todo
+    async function editTodo(id, textElement) {
+        const newText = prompt("Edit Task:", textElement.textContent);
+        if (!newText || newText.trim() === "") return;
 
-            await fetch(`/update-todo/${_id}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ task: newText })
-            });
+        await fetch(`/update-todo/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ task: newText })
+        });
 
-            fetchTodos();
-        }
+        fetchTodos();
+    }
 
-        // Toggle completed
-        async function toggleTodo(id, isDone) {
-            await fetch(`/update-todo/${_id}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ isDone })
-            });
+    // Toggle completed
+    async function toggleTodo(id, isDone) {
+        await fetch(`/update-todo/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ isDone })
+        });
 
-            fetchTodos();
-        }
-    </script>
+        fetchTodos();
+    }
+</script>
 </body>
 </html>

@@ -42,6 +42,7 @@ app.put("/update-todo/:id", async(req, res) => {
   
   try{
     const id=req.params.id;
+    console.log(id);
     const {task,isDone}=req.body;
 
     const updateFields={};
